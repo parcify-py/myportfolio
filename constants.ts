@@ -13,12 +13,13 @@ export const LANG_KEY = 'portfolio_lang';
  * Project Settings -> General -> Your Apps -> Config
  */
 export const FIREBASE_CONFIG = {
-  apiKey: "ТВОЙ_API_KEY",
-  authDomain: "ТВОЙ_PROJECT.firebaseapp.com",
-  projectId: "ТВОЙ_PROJECT_ID",
-  storageBucket: "ТВОЙ_PROJECT.appspot.com",
-  messagingSenderId: "ТВОЙ_SENDER_ID",
-  appId: "ТВОЙ_APP_ID"
+  apiKey: "AIzaSyBlnISF-qyZ0nLTUhN3mM7TDrR6ITjatbI",
+  authDomain: "portfolio-d96c0.firebaseapp.com",
+  projectId: "portfolio-d96c0",
+  storageBucket: "portfolio-d96c0.firebasestorage.app",
+  messagingSenderId: "214874585148",
+  appId: "1:214874585148:web:7d584b888c5fc594c3ab39",
+  measurementId: "G-R1T5ESY2L5"
 };
 
 export const IS_FIREBASE_CONFIGURED = FIREBASE_CONFIG.projectId !== "ТВОЙ_PROJECT_ID";
