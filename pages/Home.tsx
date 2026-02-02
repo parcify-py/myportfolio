@@ -21,12 +21,16 @@ const Home: React.FC = () => {
 
     const fetchData = async () => {
       setLoading(true);
-      const [evs, prof] = await Promise.all([
-        storageService.getEvents(),
-        storageService.getProfile()
-      ]);
-      setEvents(evs);
-      setProfile(prof);
+      try {
+        const [evs, prof] = await Promise.all([
+          storageService.getEvents(),
+          storageService.getProfile()
+        ]);
+        setEvents(evs);
+        setProfile(prof);
+      } catch (err) {
+        console.error("Data fetching failed. Ensure Firebase keys are correctly set.");
+      }
       setLoading(false);
     };
     fetchData();
@@ -62,7 +66,7 @@ const Home: React.FC = () => {
 
   const ProfileColumn = ({ title, items, category }: { title: string, items: any[], category: string }) => (
     <div className="flex-1 space-y-6">
-      <h3 className="text-[10px] md:text-xs font-bold uppercase tracking-[0.3em] text-yellow-500 border-b border-white/5 pb-4 mb-2">
+      <h3 className="text-[10px] md:text-xs font-bold uppercase tracking-[0.3em] text-yellow-500 border-b border-white/5 pb-4 mb-2 text-left">
         {title}
       </h3>
       <div className="space-y-3">
@@ -166,6 +170,7 @@ const Home: React.FC = () => {
               <div key={event.id} className="relative flex flex-col md:flex-row items-center md:items-start">
                 <div className={`w-full md:w-1/2 flex justify-center ${isLeft ? 'md:justify-end md:pr-16' : 'md:justify-start md:pl-16 md:order-last'}`}>
                   <div className="w-full max-w-lg">
+                    {/* Исправленное условие: показываем рамку только для соревнований */}
                     {event.type === 'competition' && event.place ? (
                       <AwardFrame place={event.place}>
                         <div className="p-0.5 md:p-1">{CardContent}</div>

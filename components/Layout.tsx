@@ -15,7 +15,6 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const t = TRANSLATIONS[lang];
 
   useEffect(() => {
-    // Fix: storageService methods are async
     const fetchSocials = async () => {
       const data = await storageService.getSocialLinks();
       setSocials(data);
@@ -78,7 +77,6 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
               <Link to="/" className={`hover:text-yellow-500 transition-colors whitespace-nowrap ${location.pathname === '/' ? 'text-yellow-500' : 'text-zinc-400'}`}>
                 {t.timeline}
               </Link>
-              {/* Dashboard link is now hidden from public view */}
               {storageService.isAuthenticated() && (
                 <Link to="/admin" className={`px-2 sm:px-4 py-1 sm:py-2 border rounded-full border-yellow-500 text-yellow-500 transition-all whitespace-nowrap`}>
                   {t.dashboard}
@@ -107,8 +105,16 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
             </a>
           ))}
         </div>
-        <div className="text-zinc-600 text-[8px] md:text-[10px] uppercase tracking-widest">
-          <p>&copy; {new Date().getFullYear()} Makar Simonov. All rights reserved.</p>
+        <div className="flex flex-col items-center gap-4">
+          <div className="text-zinc-600 text-[8px] md:text-[10px] uppercase tracking-widest">
+            <p>&copy; {new Date().getFullYear()} Makar Simonov. All rights reserved.</p>
+          </div>
+          <Link 
+            to="/admin" 
+            className="text-[8px] text-zinc-800 hover:text-zinc-500 transition-colors uppercase tracking-widest"
+          >
+            Admin Login
+          </Link>
         </div>
       </footer>
     </div>

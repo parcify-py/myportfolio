@@ -1,35 +1,33 @@
 
 import { EventItem, Language, SocialLink, ProfileData } from './types';
 
-export const STORAGE_KEY = 'portfolio_events_db';
-export const PROFILE_KEY = 'portfolio_profile_db';
-export const SOCIAL_KEY = 'portfolio_social_links';
+export const STORAGE_KEY = 'portfolio_events';
+export const PROFILE_KEY = 'portfolio_profile';
+export const SOCIAL_KEY = 'portfolio_social';
 export const AUTH_KEY = 'portfolio_auth_token';
 export const LANG_KEY = 'portfolio_lang';
 
 /**
- * !!! ВНИМАНИЕ !!!
- * Сюда нужно вставить данные из Firebase Console:
- * Project Settings -> General -> Your Apps -> Config
+ * ВАЖНО: Вставьте сюда свои ключи из консоли Firebase (Settings -> Your Apps)
  */
 export const FIREBASE_CONFIG = {
-  apiKey: "AIzaSyBlnISF-qyZ0nLTUhN3mM7TDrR6ITjatbI",
-  authDomain: "portfolio-d96c0.firebaseapp.com",
-  projectId: "portfolio-d96c0",
-  storageBucket: "portfolio-d96c0.firebasestorage.app",
-  messagingSenderId: "214874585148",
-  appId: "1:214874585148:web:7d584b888c5fc594c3ab39",
-  measurementId: "G-R1T5ESY2L5"
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_PROJECT_ID.appspot.com",
+  messagingSenderId: "YOUR_SENDER_ID",
+  appId: "YOUR_APP_ID"
 };
 
-export const IS_FIREBASE_CONFIGURED = FIREBASE_CONFIG.projectId !== "ТВОЙ_PROJECT_ID";
+// Проверка, заполнены ли ключи
+export const IS_FIREBASE_CONFIGURED = FIREBASE_CONFIG.apiKey !== "YOUR_API_KEY";
 
 export const INITIAL_PROFILE: ProfileData = {
-  photos: ['https://picsum.photos/seed/profile/600/600'],
+  photos: ['https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=800&auto=format&fit=crop'],
   about: {
-    en: 'Passionate developer and explorer of new technologies.',
-    ru: 'Увлеченный разработчик и исследователь новых технологий.',
-    cs: 'Vášnivý vývojář a průzkumník nových технологиí.'
+    en: 'Expert Full-stack Developer & UI/UX Designer specialized in building high-end digital experiences.',
+    ru: 'Эксперт Full-stack разработчик и UI/UX дизайнер, специализирующийся на создании высококлассных цифровых продуктов.',
+    cs: 'Expertní Full-stack vývojář a UI/UX designér specializující se na tvorbu špičkových digitálních zážitků.'
   },
   education: [],
   skills: [],
@@ -37,7 +35,11 @@ export const INITIAL_PROFILE: ProfileData = {
 };
 
 export const INITIAL_EVENTS: EventItem[] = [];
-export const INITIAL_SOCIALS: SocialLink[] = [];
+
+export const INITIAL_SOCIALS: SocialLink[] = [
+  { id: '1', platform: 'GitHub', url: 'https://github.com' },
+  { id: '2', platform: 'LinkedIn', url: 'https://linkedin.com' }
+];
 
 export const PLACE_CONFIG = {
   1: {
@@ -110,7 +112,7 @@ export const TRANSLATIONS: Record<Language, any> = {
     profile: 'Profile',
     events: 'Events',
     addItem: 'Add Item',
-    loading: 'Synchronizing...',
+    loading: 'Loading Experience...',
     configRequired: 'Firebase Configuration Required'
   },
   ru: {
@@ -159,7 +161,7 @@ export const TRANSLATIONS: Record<Language, any> = {
     profile: 'Профиль',
     events: 'События',
     addItem: 'Добавить',
-    loading: 'Синхронизация...',
+    loading: 'Загрузка...',
     configRequired: 'Требуется настройка Firebase'
   },
   cs: {
@@ -208,7 +210,7 @@ export const TRANSLATIONS: Record<Language, any> = {
     profile: 'Profil',
     events: 'Události',
     addItem: 'Přidat',
-    loading: 'Synchronizace...',
-    configRequired: 'Vyžadována konfigurace Firebase'
+    loading: 'Načítání...',
+    configRequired: 'Je vyžadována konfigurace Firebase'
   }
 };
