@@ -108,16 +108,18 @@ const Admin: React.FC = () => {
       const finalProfile = { ...profile, [key]: collection };
       await storageService.saveProfile(finalProfile);
       setProfile(finalProfile);
+      setShowProfileItemForm(false);
+      setEditingProfileItem(null);
     }
   };
 
   const handleSaveEvent = async (e: React.FormEvent) => {
     e.preventDefault();
     if (editingEvent) {
-      const finalData = { ...editingEvent };
-      // Если не соревнование - удаляем место ПОЛНОСТЬЮ
+      const finalData: any = { ...editingEvent };
+      // Если не соревнование - удаляем место ПОЛНОСТЬЮ из объекта сохранения
       if (finalData.type !== 'competition') {
-        delete finalData.place;
+        finalData.place = null; // Принудительно зануляем в базе
       }
       await storageService.saveEvent(finalData);
       await refreshData();
@@ -335,7 +337,10 @@ const Admin: React.FC = () => {
               <input type="text" value={editingProfileItem.item.title?.[formLang] || ''} onChange={e => setEditingProfileItem({ ...editingProfileItem, item: { ...editingProfileItem.item, title: { ...editingProfileItem.item.title!, [formLang]: e.target.value } } })} className="w-full bg-black border border-white/10 rounded-xl px-4 py-3 focus:border-yellow-500 text-sm text-zinc-100" placeholder={t.title} required />
               <input type="text" value={editingProfileItem.item.subtitle?.[formLang] || ''} onChange={e => setEditingProfileItem({ ...editingProfileItem, item: { ...editingProfileItem.item, subtitle: { ...editingProfileItem.item.subtitle!, [formLang]: e.target.value } } })} className="w-full bg-black border border-white/10 rounded-xl px-4 py-3 focus:border-yellow-500 text-sm text-zinc-100" placeholder={t.subtitle} required />
               <input type="text" value={editingProfileItem.item.date || ''} onChange={e => setEditingProfileItem({ ...editingProfileItem, item: { ...editingProfileItem.item, date: e.target.value } })} className="w-full bg-black border border-white/10 rounded-xl px-4 py-3 focus:border-yellow-500 text-sm text-zinc-100" placeholder={t.date} required />
-              <textarea ref={itemDescRef} value={editingProfileItem.item.description?.[formLang] || ''} onChange={e => setEditingProfileItem({ ...editingProfileItem, item: { ...editingProfileItem.item, description: { ...editingProfileItem.item.description!, [formLang]: e.target.value } } })} className="w-full bg-black border border-white/10 rounded-xl px-4 py-3 h-32 text-sm text-zinc-100" placeholder={t.description} required />
+              <div className="space-y-2">
+                 <div className="flex justify-between items-center"><span className="text-[10px] font-bold uppercase text-zinc-500">{t.description}</span><div className="flex gap-1"><button type="button" onClick={() => insertTag('b', itemDescRef, v => setEditingProfileItem({ ...editingProfileItem, item: { ...editingProfileItem.item, description: { ...editingProfileItem.item.description!, [formLang]: v } } }))} className="px-2 py-1 bg-zinc-800 rounded text-[10px] font-bold">B</button></div></div>
+                 <textarea ref={itemDescRef} value={editingProfileItem.item.description?.[formLang] || ''} onChange={e => setEditingProfileItem({ ...editingProfileItem, item: { ...editingProfileItem.item, description: { ...editingProfileItem.item.description!, [formLang]: e.target.value } } })} className="w-full bg-black border border-white/10 rounded-xl px-4 py-3 h-32 text-sm text-zinc-100" placeholder={t.description} required />
+              </div>
               <div className="flex gap-2 mb-4 flex-wrap">
                 {editingProfileItem.item.images?.map((img, idx) => (
                   <div key={idx} className="relative w-16 h-16 rounded-lg overflow-hidden border border-white/10 group"><img src={img} className="w-full h-full object-cover" /><button type="button" onClick={() => setEditingProfileItem({ ...editingProfileItem, item: { ...editingProfileItem.item, images: editingProfileItem.item.images?.filter((_, i) => i !== idx) } })} className="absolute inset-0 bg-red-600/80 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">✕</button></div>
@@ -343,7 +348,12 @@ const Admin: React.FC = () => {
                 <button type="button" onClick={() => itemFileInputRef.current?.click()} className="w-16 h-16 rounded-lg border-2 border-dashed border-white/10 flex items-center justify-center text-zinc-500 hover:text-white">+</button>
                 <input type="file" ref={itemFileInputRef} className="hidden" onChange={(e) => handleFileUpload(e, 'item')} accept="image/*" />
               </div>
-              <button type="submit" className="w-full py-4 bg-yellow-500 text-black font-bold uppercase tracking-widest rounded-2xl hover:bg-yellow-400 transition-colors">{t.save}</button>
+              <div className="flex gap-4">
+                <button type="submit" className="flex-[2] py-4 bg-yellow-500 text-black font-bold uppercase tracking-widest rounded-2xl hover:bg-yellow-400 transition-colors">{t.save}</button>
+                {editingProfileItem.item.id && (
+                  <button type="button" onClick={() => handleDeleteProfileItem(editingProfileItem.category, editingProfileItem.item.id!)} className="flex-1 py-4 bg-red-900/20 text-red-500 font-bold uppercase tracking-widest rounded-2xl hover:bg-red-900/40 transition-colors">Delete</button>
+                )}
+              </div>
             </form>
           </div>
         </div>
