@@ -11,13 +11,12 @@ export const LANG_KEY = 'portfolio_lang';
  * ВАЖНО: Вставьте сюда свои ключи из консоли Firebase (Settings -> Your Apps)
  */
 export const FIREBASE_CONFIG = {
-  apiKey: "AIzaSyBlnISF-qyZ0nLTUhN3mM7TDrR6ITjatbI",
-  authDomain: "portfolio-d96c0.firebaseapp.com",
-  projectId: "portfolio-d96c0",
-  storageBucket: "portfolio-d96c0.firebasestorage.app",
-  messagingSenderId: "214874585148",
-  appId: "1:214874585148:web:7d584b888c5fc594c3ab39",
-  measurementId: "G-R1T5ESY2L5"
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_PROJECT_ID.appspot.com",
+  messagingSenderId: "YOUR_SENDER_ID",
+  appId: "YOUR_APP_ID"
 };
 
 // Проверка, заполнены ли ключи
