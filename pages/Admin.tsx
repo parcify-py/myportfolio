@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState, useRef } from 'react';
 import { storageService } from '../services/storageService';
-import { EventItem, EventType, AwardPlace, Language, SocialLink, ProfileData, ProfileItem } from '../types';
+import { EventItem, EventType, AwardPlace, Language, SocialLink, ProfileData, ProfileItem, Collaborator } from '../types';
 import { TRANSLATIONS, LANG_KEY, INITIAL_PROFILE } from '../constants';
 
 const ProfileListManager = ({ category, items, lang, t, onEdit, onCreate, onDelete }: any) => (
@@ -147,7 +147,7 @@ const Admin: React.FC = () => {
     setEditingProfileItem(null);
   };
 
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>, target: 'event' | 'profile' | 'item') => {
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>, target: 'event' | 'profile' | 'item' | 'collaborator', index?: number) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
     const file = files[0];
@@ -162,6 +162,10 @@ const Admin: React.FC = () => {
         setProfile(updated);
       } else if (target === 'item' && editingProfileItem) {
         setEditingProfileItem({ ...editingProfileItem, item: { ...editingProfileItem.item, images: [...(editingProfileItem.item.images || []), result] } });
+      } else if (target === 'collaborator' && editingEvent && typeof index === 'number') {
+        const newCollabs = [...(editingEvent.collaborators || [])];
+        newCollabs[index] = { ...newCollabs[index], image: result };
+        setEditingEvent({ ...editingEvent, collaborators: newCollabs });
       }
       if (e.target) e.target.value = '';
     };
@@ -205,7 +209,7 @@ const Admin: React.FC = () => {
           <div className="flex justify-between items-center mb-12">
             <h1 className="text-2xl md:text-5xl font-serif font-bold tracking-tight text-left">{t.manageEvents}</h1>
             <div className="flex gap-2">
-              <button onClick={() => { setEditingEvent({ title: { en: '', ru: '', cs: '' }, date: new Date().toISOString().split('T')[0], description: { en: '', ru: '', cs: '' }, images: [], type: 'standard' }); setShowForm(true); }} className="px-6 py-3 bg-yellow-500 text-black font-bold rounded-full text-[10px] uppercase tracking-widest hover:bg-yellow-400 transition-colors">{t.createEvent}</button>
+              <button onClick={() => { setEditingEvent({ title: { en: '', ru: '', cs: '' }, date: new Date().toISOString().split('T')[0], description: { en: '', ru: '', cs: '' }, images: [], type: 'standard', collaborators: [] }); setShowForm(true); }} className="px-6 py-3 bg-yellow-500 text-black font-bold rounded-full text-[10px] uppercase tracking-widest hover:bg-yellow-400 transition-colors">{t.createEvent}</button>
               <button onClick={handleLogout} className="px-6 py-3 border border-white/10 rounded-full text-[10px] uppercase tracking-widest text-zinc-400 hover:text-white transition-colors">Logout</button>
             </div>
           </div>
@@ -305,6 +309,32 @@ const Admin: React.FC = () => {
                 <div className="flex justify-between items-center"><span className="text-[10px] font-bold uppercase text-zinc-500">{t.description}</span><div className="flex gap-1"><button type="button" onClick={() => insertTag('b', descRef, v => setEditingEvent({ ...editingEvent, description: { ...editingEvent.description!, [formLang]: v } }))} className="px-2 py-1 bg-zinc-800 rounded text-[10px] font-bold">B</button><button type="button" onClick={() => insertTag('a', descRef, v => setEditingEvent({ ...editingEvent, description: { ...editingEvent.description!, [formLang]: v } }))} className="px-2 py-1 bg-zinc-800 rounded text-[10px]">URL</button></div></div>
                 <textarea ref={descRef} value={editingEvent.description?.[formLang] || ''} onChange={e => setEditingEvent({ ...editingEvent, description: { ...editingEvent.description!, [formLang]: e.target.value } })} className="w-full bg-black border border-white/10 rounded-xl px-4 py-3 h-32 text-sm text-zinc-100" required />
               </div>
+
+              <div className="space-y-4 border-t border-white/5 pt-4">
+                <div className="flex justify-between items-center">
+                  <span className="text-[10px] font-bold uppercase text-zinc-500">{t.collaborators}</span>
+                  <button type="button" onClick={() => setEditingEvent({ ...editingEvent, collaborators: [...(editingEvent.collaborators || []), { name: '', role: '', image: '', socialUrl: '' }] })} className="px-3 py-1 bg-zinc-800 rounded text-[10px] font-bold uppercase hover:bg-zinc-700">{t.addCollaborator}</button>
+                </div>
+                <div className="space-y-2">
+                  {editingEvent.collaborators?.map((collab, idx) => (
+                    <div key={idx} className="flex gap-2 items-start bg-zinc-900/30 p-2 rounded-xl border border-white/5">
+                      <div className="relative w-10 h-10 rounded-full overflow-hidden bg-zinc-800 flex-shrink-0 group cursor-pointer" onClick={() => document.getElementById(`collab-upload-${idx}`)?.click()}>
+                        {collab.image ? <img src={collab.image} className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center text-[8px] text-zinc-500">IMG</div>}
+                        <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center text-[6px] uppercase font-bold">Upload</div>
+                      </div>
+                      <input type="file" id={`collab-upload-${idx}`} className="hidden" onChange={(e) => handleFileUpload(e, 'collaborator', idx)} accept="image/*" />
+                      
+                      <div className="flex-1 grid grid-cols-2 gap-2">
+                        <input type="text" value={collab.name} onChange={e => { const newCollabs = [...editingEvent.collaborators!]; newCollabs[idx].name = e.target.value; setEditingEvent({ ...editingEvent, collaborators: newCollabs }); }} className="bg-black border border-white/10 rounded px-2 py-1 text-xs text-zinc-100" placeholder={t.name} />
+                        <input type="text" value={collab.role} onChange={e => { const newCollabs = [...editingEvent.collaborators!]; newCollabs[idx].role = e.target.value; setEditingEvent({ ...editingEvent, collaborators: newCollabs }); }} className="bg-black border border-white/10 rounded px-2 py-1 text-xs text-zinc-100" placeholder={t.role} />
+                        <input type="text" value={collab.socialUrl} onChange={e => { const newCollabs = [...editingEvent.collaborators!]; newCollabs[idx].socialUrl = e.target.value; setEditingEvent({ ...editingEvent, collaborators: newCollabs }); }} className="col-span-2 bg-black border border-white/10 rounded px-2 py-1 text-xs text-zinc-100" placeholder="Social URL (https://...)" />
+                      </div>
+                      <button type="button" onClick={() => setEditingEvent({ ...editingEvent, collaborators: editingEvent.collaborators?.filter((_, i) => i !== idx) })} className="text-red-500 hover:text-red-400 px-2">×</button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
               <div className="flex gap-2 mb-4 flex-wrap">
                 {editingEvent.images?.map((img, idx) => (
                   <div key={idx} className="relative w-16 h-16 rounded-lg overflow-hidden border border-white/10 group"><img src={img} className="w-full h-full object-cover" /><button type="button" onClick={() => setEditingEvent({ ...editingEvent, images: editingEvent.images?.filter((_, i) => i !== idx) })} className="absolute inset-0 bg-red-600/80 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">✕</button></div>

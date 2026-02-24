@@ -90,11 +90,35 @@ const EventDetails: React.FC = () => {
               <h3 className="text-[10px] font-bold tracking-[0.3em] uppercase text-zinc-500">{t.summary}</h3>
               <ul className="space-y-4 text-xs md:text-sm">
                 <li className="flex justify-between py-2 border-b border-white/5"><span className="text-zinc-500">{t.status}</span><span className="font-medium text-green-500">{t.completed}</span></li>
-                <li className="flex justify-between py-2 border-b border-white/5"><span className="text-zinc-500">{t.eventType}</span><span className="font-medium capitalize">{event.type}</span></li>
+                <li className="flex justify-between py-2 border-b border-white/5"><span className="text-zinc-500">{t.eventType}</span><span className="font-medium capitalize">{t[event.type]}</span></li>
                 {event.type === 'competition' && event.place && awardConfig && (
                   <li className="flex justify-between py-2 border-b border-white/5"><span className="text-zinc-500">{t.ranking}</span><span className={`font-medium ${awardConfig.text}`}>{awardConfig.label[lang]}</span></li>
                 )}
               </ul>
+
+              {event.collaborators && event.collaborators.length > 0 && (
+                <div className="pt-6 border-t border-white/5">
+                  <h3 className="text-[10px] font-bold tracking-[0.3em] uppercase text-zinc-500 mb-4">{t.collaborators}</h3>
+                  <div className="flex flex-wrap gap-3">
+                    {event.collaborators.map((collab, idx) => (
+                      <a 
+                        key={idx} 
+                        href={collab.socialUrl} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className={`flex items-center gap-2 pr-3 py-1 rounded-full bg-zinc-800/50 border border-white/5 transition-all ${collab.socialUrl ? 'hover:bg-zinc-800 hover:border-yellow-500/30 cursor-pointer' : 'cursor-default'}`}
+                        onClick={e => !collab.socialUrl && e.preventDefault()}
+                      >
+                        <img src={collab.image || 'https://ui-avatars.com/api/?name=' + collab.name} alt={collab.name} className="w-6 h-6 rounded-full object-cover" />
+                        <div className="flex flex-col text-left">
+                          <span className="text-[10px] font-bold text-zinc-200 leading-none">{collab.name}</span>
+                          {collab.role && <span className="text-[8px] text-zinc-500 leading-none mt-0.5">{collab.role}</span>}
+                        </div>
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           </aside>
         </div>
