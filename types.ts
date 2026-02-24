@@ -3,6 +3,13 @@ export type EventType = 'standard' | 'competition' | 'journey';
 export type AwardPlace = 1 | 2 | 3;
 export type Language = 'en' | 'ru' | 'cs';
 
+export interface Collaborator {
+  name: string;
+  role?: string;
+  image?: string;
+  socialUrl?: string;
+}
+
 export interface EventItem {
   id: string;
   title: Record<Language, string>;
@@ -11,6 +18,7 @@ export interface EventItem {
   images: string[];
   type: EventType;
   place?: AwardPlace;
+  collaborators?: Collaborator[];
   createdAt: number;
 }
 
