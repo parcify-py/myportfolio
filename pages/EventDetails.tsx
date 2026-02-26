@@ -76,7 +76,7 @@ const EventDetails: React.FC = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-12 text-left">
           <div className="lg:col-span-8 space-y-8 md:space-y-12">
-            <div className="text-zinc-300 leading-relaxed font-light text-lg md:text-xl prose prose-invert prose-yellow max-w-none break-words" dangerouslySetInnerHTML={{ __html: description }} />
+            <div className="text-zinc-300 leading-relaxed font-light text-lg md:text-xl prose prose-invert prose-yellow max-w-none break-words whitespace-pre-wrap" dangerouslySetInnerHTML={{ __html: description }} />
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
               {event.images.map((img, idx) => (
                 <div key={idx} className="aspect-[4/3] rounded-xl md:rounded-2xl overflow-hidden border border-white/5 bg-zinc-900 shadow-2xl">
